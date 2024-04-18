@@ -9,9 +9,6 @@
 .history
 .svn/
 migrate_working_dir/
-.yaml 
-.dart
-.lockfile
 
 # IntelliJ related
 *.iml
