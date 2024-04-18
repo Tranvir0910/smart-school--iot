@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "42598181979",
+    "firebase_url": "https://greenhouse-16b3b-default-rtdb.firebaseio.com",
+    "project_id": "greenhouse-16b3b",
+    "storage_bucket": "greenhouse-16b3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42598181979:android:3b1ec2a85a3f06a51ce37e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42598181979-hupfr0gp2bvf770o84v3fpeb0osm6hj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBglT5JoUEMpSIeYqwQ5nU-XD8g8Sram6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42598181979-hupfr0gp2bvf770o84v3fpeb0osm6hj5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "42598181979-j8o94iek2ijncf5dpj5gr18rr13sgvjg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iotProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
