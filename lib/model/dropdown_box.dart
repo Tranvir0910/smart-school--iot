@@ -2,7 +2,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import '../const/const.dart';
 import '../pages/home/control_page.dart';
-import '../pages/home/line_page.dart';
 class DropDownSelect extends StatefulWidget {
   const DropDownSelect({super.key});
 
@@ -147,10 +146,6 @@ abstract class MenuItems {
   static void onChanged(BuildContext context, String item) {
     switch (item) {
       case '2A08':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LinePage()),
-        );
         break;
       case '2A16':
         //Do something

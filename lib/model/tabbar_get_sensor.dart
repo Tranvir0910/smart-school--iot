@@ -115,11 +115,11 @@ class _TabbarSensorDataState extends State<TabbarSensorData> with TickerProvider
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
-                  children: <Widget>[
-                    GetSensorData(classroom: '2A08'),
-                    GetSensorData(classroom: '2A16'),
-                    GetSensorData(classroom: '2A27'),
-                    GetSensorData(classroom: '2A34'),
+                  children: const <Widget>[
+                    // GetSensorData(classroom: '2A08'),
+                    // GetSensorData(classroom: '2A16'),
+                    // GetSensorData(classroom: '2A27'),
+                    // GetSensorData(classroom: '2A34'),
                   ],
                 ),
               ),

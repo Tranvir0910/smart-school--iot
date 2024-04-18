@@ -71,7 +71,7 @@ class Devices extends StatelessWidget {
                           height: 14,
                         ),
                         SizedBox(
-                          width: 65,
+                          width: 80,
                           child: Text(
                             name,
                             style: const TextStyle(

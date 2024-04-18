@@ -4,10 +4,7 @@ import '../pages/home/sensor.dart';
 
 class GetSensorData extends StatefulWidget {
 
-  // ignore: prefer_typing_uninitialized_variables
-  final classroom;
-
-  const GetSensorData({Key? key, required this.classroom}) : super(key: key);
+  const GetSensorData({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -22,9 +19,9 @@ class _GetSensorDataState extends State<GetSensorData> {
       
   static String humidity  = '';
         
-  static String airQuality  = '';
+  static int airQuality = 0;
           
-  static String soundQuality  = '';
+  static int soundQuality  = 0;
 
   List myElement = [
     ["Temperature (°C)", "assets/icons/temperature_cold.png", temperature],
@@ -48,7 +45,7 @@ class _GetSensorDataState extends State<GetSensorData> {
   void initState() {
     super.initState();
     // getSensorInClass();
-    sensorDataStream = FirebaseFirestore.instance.collection('Classroom').doc('Sensor').snapshots();
+    sensorDataStream = FirebaseFirestore.instance.collection('2A08').doc('Sensor').snapshots();
   }
 
   @override
@@ -64,17 +61,29 @@ class _GetSensorDataState extends State<GetSensorData> {
 
           Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
 
-          if (data != null && data.containsKey(widget.classroom)) {
+          if (data != null) {
             
-            myElement[1][2] = data[widget.classroom]['Humidity'].toString();
-            myElement[0][2] = data[widget.classroom]['Temperature'].toString();
-            myElement[2][2] = data[widget.classroom]['Air Quality'].toString();
-            myElement[3][2] = data[widget.classroom]['Sound Quality'].toString();
+            // myElement[1][2] = data[widget.classroom]['Humidity'].toString();
+            // myElement[0][2] = data[widget.classroom]['Temperature'].toString();
+            // myElement[2][2] = data[widget.classroom]['AirQuality'].toString();
+            // myElement[3][2] = data[widget.classroom]['SoundQuality'].toString();
+
+            if(int.parse(data['AirQuality']) < 1800){
+              myElement[2][2] = 'Good';
+            }else if(int.parse(data['AirQuality']) < 2300){
+              myElement[2][2] = 'Moderate';
+            }else{
+              myElement[2][2] = 'Unhealthy';
+            }
+
+            myElement[1][2] = data['Humidity'].toString();
+            myElement[0][2] = data['Temperature'].toString();
+            myElement[3][2] = data['SoundQuality'].toString();
 
             return Expanded(
               child: GridView.builder(
                 itemCount: myElement.length,
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(10),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, 
                   crossAxisSpacing: 16, 

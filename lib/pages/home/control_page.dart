@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/pages/home/home_page.dart';
 import 'package:flutter_firebase/pages/home/devices_active_page.dart';
+import 'package:flutter_firebase/pages/home/usage_page.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -59,7 +60,7 @@ class _ControlPageState extends State<ControlPage> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DevicesActivePage(),
-    TabbarSensorData(),
+    UsagePage(),
     AddDevices(),
   ];
 

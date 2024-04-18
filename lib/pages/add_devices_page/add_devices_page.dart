@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/pages/add_devices_page/signin_screen.dart';
-import 'package:flutter_firebase/pages/add_devices_page/theme/theme.dart';
 import 'package:flutter_firebase/pages/add_devices_page/widgets/custom_scaffold.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:icons_plus/icons_plus.dart';
-
 import '../../const/const.dart';
-import '../home/control_page.dart';
 
 class AddDevices extends StatefulWidget {
   const AddDevices({super.key});
@@ -36,7 +31,9 @@ class _AddDevicesState extends State<AddDevices> {
     ];
 
     final List<Map<String, String>> svgIcons = [
-      {'name': 'Fan', 'path': 'assets/svg/ac.svg'},
+      {'name': 'Fan', 'path': 'assets/svg/fan.svg'},
+      {'name': 'Projector', 'path': 'assets/svg/projector.svg'},
+      {'name': 'Board', 'path': 'assets/svg/smart_board.svg'},
       {'name': 'Bright', 'path': 'assets/svg/bright.svg'},
       {'name': 'Clock', 'path': 'assets/svg/clock.svg'},
       {'name': 'Drop', 'path': 'assets/svg/drop.svg'},
@@ -44,7 +41,6 @@ class _AddDevicesState extends State<AddDevices> {
       {'name': 'Snow', 'path': 'assets/svg/snow.svg'},
       {'name': 'TV', 'path': 'assets/svg/tv.svg'},
       {'name': 'Speaker', 'path': 'assets/svg/speaker.svg'},
-      {'name': 'Watering', 'path': 'assets/svg/watering.svg'},
     ];
 
     final List<String> devicesType = [
@@ -52,7 +48,6 @@ class _AddDevicesState extends State<AddDevices> {
       'Led',
       'Smart Board',
       'Projector',
-      'Interactive Display',
       'Computer',
       'Tablet',
       'Smartphone',
@@ -66,6 +61,7 @@ class _AddDevicesState extends State<AddDevices> {
   String selectedClassroom = '';
   String selectedIconPath = '';
   String typeDevices = '';
+  String color = '';
 
     return CustomScaffold(
       child: Column(
@@ -337,8 +333,8 @@ class _AddDevicesState extends State<AddDevices> {
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                             backgroundColor: myConstants.primaryColor,
-                            padding: EdgeInsets.all(15),
-                            textStyle: TextStyle(
+                            padding: const EdgeInsets.all(15),
+                            textStyle: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold
                                       )
@@ -350,6 +346,13 @@ class _AddDevicesState extends State<AddDevices> {
 
                               collectionRef.doc(selectedClassroom).get()
                                 .then((docSnapshot) {
+                                  if(typeDevices == 'Fan'){
+                                    color = '#cee7f0';
+                                  }else if(typeDevices == 'Led'){
+                                    color = '#fef7e2';
+                                  }else{
+                                    color = '#9fe3ee';
+                                  }
                                   if (docSnapshot.data()!.containsKey(devicesName)) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -358,11 +361,13 @@ class _AddDevicesState extends State<AddDevices> {
                                     );
                                   } else {
                                     Map<String, dynamic> updateData = {
-                                      devicesName: {
+                                      devicesName : {
                                         "devicesName": devicesName,
                                         "classRoom": selectedClassroom,
                                         "iconPath": selectedIconPath,
                                         "typeDevices": typeDevices,
+                                        "isActive": false,
+                                        "color": color,
                                       }
                                     };
 
@@ -382,7 +387,7 @@ class _AddDevicesState extends State<AddDevices> {
                                 });
                             } 
                           },
-                          child: const Text('Add Devices'),
+                          child: const Text('Add Devices', style: TextStyle(color: Colors.white)),
                         ),
                       ),
                     ],

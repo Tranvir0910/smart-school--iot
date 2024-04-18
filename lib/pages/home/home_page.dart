@@ -110,16 +110,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             //     ));
           ],
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add_alert),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
-          ),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: const Icon(Icons.add_alert),
+        //     tooltip: 'Show Snackbar',
+        //     onPressed: () {
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //           const SnackBar(content: Text('This is a snackbar')));
+        //     },
+        //   ),
+        // ],
       ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Padding(
@@ -383,7 +383,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               height: 10,
             ),
             // const GetSensorData(classroom: '2A08'),
-            Expanded(child: TabbarSensorData()),   
+            const Expanded(child: GetSensorData()),   
             const SizedBox(
               height: 5,
             ),

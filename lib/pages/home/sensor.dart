@@ -71,7 +71,8 @@ class SensorWidget extends StatelessWidget {
                     firestoreData.toString(),
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width / 40,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black54,
                     ),
                   )
                 ],

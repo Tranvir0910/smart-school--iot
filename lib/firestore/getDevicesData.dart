@@ -4,8 +4,6 @@ import 'package:flutter_firebase/utils/string_to_color.dart';
 import '../model/device_model.dart';
 import '../pages/home/control_page.dart';
 import '../pages/home/devices.dart';
-import '../pages/home/devices_active_page.dart';
-import '../pages/home/sensor.dart';
 
 class GetDevicesData extends StatefulWidget {
 
@@ -24,6 +22,9 @@ class _GetDevicesDataState extends State<GetDevicesData> {
   late Stream<DocumentSnapshot> sensorDataStream;
 
   List<DeviceModel> devices = [];
+  List<String> dataMapKey = [];
+  Set<String> processedKeys = {}; // Set to store processed keys
+  Set<String> iconPath = {};
 
   // late Stream<Map<String, dynamic>> sensor;
 
@@ -35,7 +36,7 @@ class _GetDevicesDataState extends State<GetDevicesData> {
   //     print('Error retrieving field names: $error');
   //   }
   // }
-
+  
   @override
   void initState() {
     super.initState();
@@ -55,15 +56,29 @@ class _GetDevicesDataState extends State<GetDevicesData> {
         } else {
 
           Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
-          print('Data is: $data');
 
+          print('Data is: $data');
           if (data != null) {
+            for (var entry in data.entries) {
+              if(!processedKeys.contains(entry.key)) {
+                processedKeys.add(entry.key); // Mark key as processed
+                devices.add(
+                  DeviceModel(
+                    name: entry.key,
+                    color: entry.value['color'],
+                    isActive: entry.value['isActive'],
+                    icon: entry.value['iconPath'],
+                  )
+                );
+                iconPath.add(entry.value['iconPath']);
+              }
+            }
             return Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.only(top: 10, bottom: 20),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 2,
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
                 ),
                 itemCount: devices.length,
                 itemBuilder: (BuildContext ctx, index) {
@@ -74,17 +89,27 @@ class _GetDevicesDataState extends State<GetDevicesData> {
                     isActive: devices[index].isActive,
                     onChanged: (val) {
                       setState(() {
-                        if(devices[index].name == 'Lighting'){
+                        for (var keyIndex in processedKeys) {
+                          if(devices[index].name == keyIndex){
                             devices[index].isActive = !devices[index].isActive;
-                            ref.child("status led").set(devices[index].isActive);
-                        }else if(devices[index].name == 'Fan'){
-                          devices[index].isActive = !devices[index].isActive;
-                          ref.child("status fan").set(devices[index].isActive);
-                        }else if(devices[index].name == 'Watering'){
-                          devices[index].isActive = !devices[index].isActive;
-                          ref.child("status motor").set(devices[index].isActive);
+                            FirebaseFirestore.instance
+                              .collection('Devices')
+                              .doc('2A08') // Use device name as document ID
+                              .update({
+                                devices[index].name : {
+                                  'isActive' : devices[index].isActive,
+                                  'classRoom' : '2A08',
+                                  'color' : devices[index].color,
+                                  'devicesName' : devices[index].name,
+                                  'iconPath': devices[index].icon,
+                                }
+                              })
+                              .then((_) => print('Successfully updated device state on Firestore'))
+                              .catchError((error) => print('Error updating device state: $error'));
+                          }
                         }
-                      });
+                      }
+                    );
                     },
                   );
                 }

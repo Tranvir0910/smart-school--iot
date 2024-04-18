@@ -38,8 +38,7 @@ class SpeedWidget extends StatelessWidget {
   ElevatedButton _button(int _speed, bool isActive) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          onPrimary: isActive ? Colors.black : Colors.white,
-          primary: isActive ? Colors.white : Colors.transparent,
+          foregroundColor: isActive ? Colors.black : Colors.white, backgroundColor: isActive ? Colors.white : Colors.transparent,
           minimumSize: const Size(38, 38),
           padding: EdgeInsets.zero,
           shape: const CircleBorder(),

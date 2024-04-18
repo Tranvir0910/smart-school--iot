@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/firestore/getDevicesData.dart';
 import 'package:flutter_firebase/pages/add_devices_page/add_devices_page.dart';
 import '../../const/const.dart';
 import '../../model/device_model.dart';
@@ -85,12 +86,12 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
           const SizedBox(width: 10,)
         ],
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -126,67 +127,8 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
             ),
 
             Expanded(
-              child: TabbarDataDevices(),
+              child: GetDevicesData(classroom: '2A08',),
             ),
-            // Line chart
-            // Container(
-            //   width: size.width,
-            //   height: 130,
-            //   decoration: BoxDecoration(
-            //     color: Colors.transparent,
-            //     borderRadius: BorderRadius.circular(15),
-            //     boxShadow: [
-            //       BoxShadow(
-            //         color: myConstants.primaryColor.withOpacity(.5),
-            //         offset: const Offset(0, 25),
-            //         blurRadius: 10,
-            //         spreadRadius: -12,
-            //       )
-            //     ]
-            //   ),
-              
-            //   // child: Chart(
-            //   //   layers: [
-            //   //     ChartAxisLayer(
-            //   //       settings: ChartAxisSettings(
-            //   //         x: ChartAxisSettingsAxis(
-            //   //           min: 7.0,
-            //   //           max: 13.0,
-            //   //           frequency: 1.0,
-            //   //           textStyle: TextStyle(
-            //   //             color: Colors.white.withOpacity(0.6),
-            //   //             fontSize: 10.0,
-            //   //             ),
-            //   //         ),
-            //   //         y: ChartAxisSettingsAxis(
-            //   //           frequency: 100.0,
-            //   //           max: 300.0,
-            //   //           min: 0.0,
-            //   //           textStyle: TextStyle(
-            //   //             color: Colors.white.withOpacity(0.6),
-            //   //             fontSize: 10.0,
-            //   //           ),
-            //   //         ),
-            //   //       ),
-            //   //       labelX: (value) => value.toInt().toString(),
-            //   //       labelY: (value) => value.toInt().toString(),
-            //   //     ),
-            //   //     ChartLineLayer(
-            //   //       items: List.generate(
-            //   //         13 - 7 + 1,
-            //   //         (index) => ChartLineDataItem(
-            //   //           value: Random().nextInt(280) + 20,
-            //   //           x: index.toDouble() + 7,
-            //   //         ),
-            //   //       ),
-            //   //       settings: ChartLineSettings(
-            //   //         thickness: 5, 
-            //   //         color: myConstants.secondaryColor,
-            //   //       ),
-            //   //     ),
-            //   //   ],
-            //   // ),
-            // ),
           ],
         ),
       ),
