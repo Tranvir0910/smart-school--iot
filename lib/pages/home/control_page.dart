@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/pages/home/home_page.dart';
 import 'package:flutter_firebase/pages/home/devices_active_page.dart';
-import 'package:flutter_firebase/pages/home/usage_page.dart';
+import 'package:flutter_firebase/pages/home/humidity_line.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
-import '../../model/tabbar_get_sensor.dart';
 import '../add_devices_page/add_devices_page.dart';
 
 class ControlPage extends StatefulWidget {
@@ -60,7 +59,7 @@ class _ControlPageState extends State<ControlPage> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DevicesActivePage(),
-    UsagePage(),
+    HumidityLine(),
     AddDevices(),
   ];
 

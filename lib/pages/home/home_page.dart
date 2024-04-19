@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import '../../const/const.dart';
 import '../../firestore/getDataSensor.dart';
-import '../../model/tabbar_get_sensor.dart';
 import 'control_page.dart';
 
 class HomePage extends StatefulWidget {

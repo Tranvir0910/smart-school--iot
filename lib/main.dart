@@ -8,7 +8,6 @@ void main() async {
   await Firebase.initializeApp(
     name: 'flutter_firebase',
     options: DefaultFirebaseOptions.currentPlatform,
-
   );
   runApp(const MyApp());
 }

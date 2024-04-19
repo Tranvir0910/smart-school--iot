@@ -20,7 +20,6 @@ class _AddDevicesState extends State<AddDevices> {
   @override
   Widget build(BuildContext context) {
 
-    Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
 
     final List<String> classRoom = [

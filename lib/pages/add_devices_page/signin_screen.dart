@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/pages/add_devices_page/add_devices_page.dart';
 import 'package:flutter_firebase/pages/add_devices_page/theme/theme.dart';
 import 'package:flutter_firebase/pages/add_devices_page/widgets/custom_scaffold.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

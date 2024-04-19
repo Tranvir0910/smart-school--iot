@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/firestore/getDevicesData.dart';
-import 'package:flutter_firebase/pages/add_devices_page/add_devices_page.dart';
 import '../../const/const.dart';
 import '../../model/device_model.dart';
-import '../../model/tabbar_get_devices.dart';
 
 class DevicesActivePage extends StatefulWidget {
   const DevicesActivePage({super.key});
@@ -40,7 +38,6 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
   @override
   Widget build(BuildContext context) {
 
-    Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants(); 
 
     return Scaffold(
