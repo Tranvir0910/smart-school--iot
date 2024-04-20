@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import for Firestore
-import 'dart:math' as math;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HumidityLine extends StatefulWidget {
   const HumidityLine({super.key});
@@ -15,16 +14,28 @@ class HumidityLine extends StatefulWidget {
 
 class _HumidityLineState extends State<HumidityLine> {
   
-  late List<LiveData> chartData;
+  List<LiveData> chartData = [];
   late StreamSubscription<DocumentSnapshot> _firestoreSubscription;
   final _firestore = FirebaseFirestore.instance;
   late TooltipBehavior _tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
   DateTime time = DateTime.now();
+  Set<String> processedKeys = {}; // Set to store processed keys
+
+  final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
+  final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
   
   @override
   void initState() {
-    chartData = [];
+    readInitialData(timestampDate).then((data) {
+      setState(() {
+        chartData = data; // Update your chartData list here
+      });
+    }).catchError((error) {
+      print('Error fetching data: $error');
+      // Handle error gracefully, if needed
+    });
+    
     _startListeningToFirestore();
     _tooltipBehavior = TooltipBehavior(enable: true);
      _zoomPanBehavior = ZoomPanBehavior(
@@ -45,7 +56,44 @@ class _HumidityLineState extends State<HumidityLine> {
     super.dispose();
   }
 
+  Future<void> updateDataAndChart(double? humidity) async {
+
+    if (humidity != null) {
+
+      
+
+      chartData.add(LiveData(timestampHour, humidity));
+
+      // Update Firestore using a merge operation to preserve existing data
+      final docRef = await _firestore.collection('Usage').doc(timestampDate).get();
+      if (docRef.exists) {
+        final DocumentReference documentReference = FirebaseFirestore.instance
+            .collection("Usage")
+            .doc(timestampDate);
+        return await documentReference.update({
+          timestampHour: {
+            "Humidity": humidity,
+          },
+        }).then((_) => print('Successfully updated data on Firestore'))
+          .catchError((error) => print('Error updating data on Firestore: $error'));;
+      } else {
+        final DocumentReference documentReference = FirebaseFirestore.instance
+            .collection("Usage")
+            .doc(timestampDate);
+        return await documentReference.set({
+          timestampHour: {
+            "Humidity": humidity,
+          },
+        });
+      }
+    } else {
+      print('Missing humidity data in Firestore document');
+    }
+  }
+
+
   void _startListeningToFirestore() {
+
     final docRef = _firestore.collection('2A08').doc('Sensor');
     _firestoreSubscription = docRef.snapshots().listen((snapshot) {
       
@@ -61,17 +109,7 @@ class _HumidityLineState extends State<HumidityLine> {
 
         if (humidity != null) {
           setState(() {
-            chartData.add(LiveData(DateFormat("h:mm:ss a - yy-MM-dd").format(time).toString(), humidity));
-            FirebaseFirestore.instance
-              .collection('Usage')
-              .doc('2A08') // Use device name as document ID
-              .update({
-                DateFormat("h:mm:ss a - yy-MM-dd").format(time).toString() : {
-                  "Humidity": humidity,
-                }
-              })
-              .then((_) => print('Successfully updated data state on Firestore'))
-              .catchError((error) => print('Error updating data state: $error'));
+            updateDataAndChart(humidity);      
           });
         } else {
           print('Missing humidity data in Firestore document');
@@ -81,6 +119,35 @@ class _HumidityLineState extends State<HumidityLine> {
       }
     });
   }
+
+  Future<List<LiveData>> readInitialData(String timestampDate) async {
+    final docRef = _firestore.collection('Usage').doc(timestampDate);
+
+    try {
+      final querySnapshot = await docRef.get(); // Use get() for one-time retrieval
+
+      if (querySnapshot.exists) {
+        final data = querySnapshot.data() as Map<String, dynamic>;
+        data.forEach((timestamp, value) {
+          final humidity = value['Humidity'] as double?;
+          if (humidity != null) {
+            chartData.add(LiveData(timestamp, humidity));
+          }
+        });
+      } else {
+        print('Document not found in Firestore');
+      }
+      return chartData; // Return the populated list
+    } on FirebaseException catch (error) {
+      print('Error reading data from Firestore: $error');
+      return []; // Return an empty list on error (optional)
+    } catch (error) {
+      print('Unexpected error: $error');
+      return []; // Return an empty list on error (optional)
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +160,12 @@ class _HumidityLineState extends State<HumidityLine> {
         });
       }
     }
-
     Timer.periodic(duration, updateState);
 
     return SafeArea(
       child: Scaffold(
         body: SfCartesianChart(
-          title: const ChartTitle(text: 'Humidity & Temperature'),
+          title: const ChartTitle(text: 'Humidity'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: _tooltipBehavior,
           backgroundColor: Colors.transparent, // Optional for transparent background
@@ -113,7 +179,7 @@ class _HumidityLineState extends State<HumidityLine> {
               
             )
           ],
-          primaryXAxis: CategoryAxis(
+          primaryXAxis: const CategoryAxis(
             majorGridLines: MajorGridLines(width: 0),
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             interval: 3,
