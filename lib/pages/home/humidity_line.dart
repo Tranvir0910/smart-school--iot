@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -22,12 +21,11 @@ class _HumidityLineState extends State<HumidityLine> {
   DateTime time = DateTime.now();
   Set<String> processedKeys = {}; // Set to store processed keys
 
-  final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
-  final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
+  final timestampDateNow = DateFormat("dd-MM-yy").format(DateTime.now());
   
   @override
   void initState() {
-    readInitialData(timestampDate).then((data) {
+    readInitialData(timestampDateNow).then((data) {
       setState(() {
         chartData = data; // Update your chartData list here
       });
@@ -38,15 +36,16 @@ class _HumidityLineState extends State<HumidityLine> {
     
     _startListeningToFirestore();
     _tooltipBehavior = TooltipBehavior(enable: true);
-     _zoomPanBehavior = ZoomPanBehavior(
-        enableSelectionZooming: true,
-        selectionRectBorderColor: Colors.red,
-        selectionRectBorderWidth: 2,
-        selectionRectColor: Colors.grey,
-        enablePanning: true,
-        zoomMode: ZoomMode.x,
-        enableMouseWheelZooming: true,
-        maximumZoomLevel: 0.7);
+    _zoomPanBehavior = ZoomPanBehavior(
+      enablePinching: true,
+      enableSelectionZooming: true,
+      selectionRectBorderColor: Colors.red,
+      selectionRectBorderWidth: 2,  
+      selectionRectColor: Colors.grey,
+      enablePanning: true,
+      zoomMode: ZoomMode.x,
+      enableMouseWheelZooming: true,
+      maximumZoomLevel: 0.7);
     super.initState();
   }
 
@@ -57,11 +56,10 @@ class _HumidityLineState extends State<HumidityLine> {
   }
 
   Future<void> updateDataAndChart(double? humidity) async {
+    final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
+    final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
 
     if (humidity != null) {
-
-      
-
       chartData.add(LiveData(timestampHour, humidity));
 
       // Update Firestore using a merge operation to preserve existing data
@@ -165,10 +163,12 @@ class _HumidityLineState extends State<HumidityLine> {
     return SafeArea(
       child: Scaffold(
         body: SfCartesianChart(
+          enableAxisAnimation: true,
           title: const ChartTitle(text: 'Humidity'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: _tooltipBehavior,
           backgroundColor: Colors.transparent, // Optional for transparent background
+          zoomPanBehavior: _zoomPanBehavior,
           series: <LineSeries<LiveData, String>>[
             LineSeries<LiveData, String>(
               name: 'Humidity',
@@ -182,7 +182,7 @@ class _HumidityLineState extends State<HumidityLine> {
           primaryXAxis: const CategoryAxis(
             majorGridLines: MajorGridLines(width: 0),
             edgeLabelPlacement: EdgeLabelPlacement.shift,
-            interval: 3,
+            interval: 300,
             title: AxisTitle(text: 'Time (seconds)'),
           ),
           primaryYAxis: const NumericAxis(

@@ -100,8 +100,8 @@ class _HumidityLineState extends State<HumidityLine> {
     return SafeArea(
       child: Scaffold(
         body: SfCartesianChart(
-          title: ChartTitle(text: 'Humidity'),
-          legend: Legend(isVisible: true),
+          title: const ChartTitle(text: 'Humidity'),
+          legend: const Legend(isVisible: true),
           tooltipBehavior: _tooltipBehavior,
           backgroundColor: Colors.transparent, // Optional for transparent background
           series: <LineSeries<LiveData, String>>[

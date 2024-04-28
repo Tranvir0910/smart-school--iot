@@ -68,17 +68,24 @@ class _GetSensorDataState extends State<GetSensorData> {
             // myElement[2][2] = data[widget.classroom]['AirQuality'].toString();
             // myElement[3][2] = data[widget.classroom]['SoundQuality'].toString();
 
-            if(int.parse(data['AirQuality']) < 1800){
+            if(int.parse(data['AirQuality']) < 2000){
               myElement[2][2] = 'Good';
-            }else if(int.parse(data['AirQuality']) < 2300){
+            }else if(int.parse(data['AirQuality']) < 2500){
               myElement[2][2] = 'Moderate';
             }else{
               myElement[2][2] = 'Unhealthy';
             }
 
+            if(int.parse(data['SoundQuality']) < 100){
+              myElement[3][2] = 'Normal';
+            }else if(int.parse(data['SoundQuality']) < 2500){
+              myElement[3][2] = 'Noise';
+            }else{
+              myElement[3][2] = 'Very Noise';
+            }
+
             myElement[1][2] = data['Humidity'].toString();
             myElement[0][2] = data['Temperature'].toString();
-            myElement[3][2] = data['SoundQuality'].toString();
 
             return Expanded(
               child: GridView.builder(

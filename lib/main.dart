@@ -4,9 +4,17 @@ import 'firebase/firebase_options.dart';
 import 'pages/home/control_page.dart';
 
 void main() async {
+   FlutterError.onError = (FlutterErrorDetails details) {
+    if (details.library == 'image resource service' &&
+        details.exception.toString().contains('404')) {
+        print('Suppressed cachedNetworkImage Exception');
+      return;
+    }
+    FlutterError.presentError(details);
+  };
   WidgetsFlutterBinding.ensureInitialized();  
   await Firebase.initializeApp(
-    name: 'flutter_firebase',
+    // name: 'flutter_firebase',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());

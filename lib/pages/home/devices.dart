@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../control_panel/control_panel_page.dart';
 
 class Devices extends StatelessWidget {
   final String name;
@@ -36,7 +35,7 @@ class Devices extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20.0))
           ),
           openBuilder: (BuildContext context, VoidCallback _) {
-            return ControlPanelPage(tag: name);
+            return const Text('');
           },
           tappable: name == "Smart AC" ? true : false,
           closedBuilder: (BuildContext _, VoidCallback openContainer) {

@@ -44,6 +44,26 @@ class _GetDevicesDataState extends State<GetDevicesData> {
     sensorDataStream = FirebaseFirestore.instance.collection('Devices').doc(widget.classroom).snapshots();
   }
 
+  Future<void> updateDeviceState(bool status, String nameDoc) async {
+  try {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final CollectionReference collectionRef = firestore.collection('2A08');
+    final DocumentReference documentRef = collectionRef.doc(nameDoc);
+
+    final DocumentSnapshot documentSnapshot = await documentRef.get();
+    if (documentSnapshot.exists) {
+      await documentRef.update({'state': status});
+      print('Device state updated successfully!'); // Optional success message
+    } else {
+      await documentRef.set({'state': status});
+      print('Device added with state!'); // Optional success message
+    }
+  } catch (error) {
+    print('Error updating device state: $error');
+  }
+}
+  
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -106,6 +126,9 @@ class _GetDevicesDataState extends State<GetDevicesData> {
                               })
                               .then((_) => print('Successfully updated device state on Firestore'))
                               .catchError((error) => print('Error updating device state: $error'));
+                            
+                              updateDeviceState(devices[index].isActive, devices[index].name);
+
                           }
                         }
                       }
@@ -122,4 +145,6 @@ class _GetDevicesDataState extends State<GetDevicesData> {
       },
     );
   }
+  
 }
+
