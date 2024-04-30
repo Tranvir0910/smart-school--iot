@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/const/const.dart';
+import 'package:flutter_firebase/pages/home/temperature_line.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +15,8 @@ class HumidityLine extends StatefulWidget {
 
 class _HumidityLineState extends State<HumidityLine> {
   
-  List<LiveData> chartData = [];
+  Constants myConstants = Constants(); 
+  List<LiveData> chartDataHumidity = [];
   late StreamSubscription<DocumentSnapshot> _firestoreSubscription;
   final _firestore = FirebaseFirestore.instance;
   late TooltipBehavior _tooltipBehavior;
@@ -25,15 +28,14 @@ class _HumidityLineState extends State<HumidityLine> {
   
   @override
   void initState() {
-    readInitialData(timestampDateNow).then((data) {
+    readInitialDataHumidity(timestampDateNow).then((data) {
       setState(() {
-        chartData = data; // Update your chartData list here
+        chartDataHumidity = data;
       });
     }).catchError((error) {
       print('Error fetching data: $error');
       // Handle error gracefully, if needed
     });
-    
     _startListeningToFirestore();
     _tooltipBehavior = TooltipBehavior(enable: true);
     _zoomPanBehavior = ZoomPanBehavior(
@@ -55,13 +57,12 @@ class _HumidityLineState extends State<HumidityLine> {
     super.dispose();
   }
 
-  Future<void> updateDataAndChart(double? humidity) async {
+Future<void> updateDataAndChart(double? temperature, double? humidity) async {
     final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
     final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
 
-    if (humidity != null) {
-      chartData.add(LiveData(timestampHour, humidity));
-
+    if (temperature != null && humidity != null) {
+      chartDataHumidity.add(LiveData(timestampHour, humidity));
       // Update Firestore using a merge operation to preserve existing data
       final docRef = await _firestore.collection('Usage').doc(timestampDate).get();
       if (docRef.exists) {
@@ -70,6 +71,7 @@ class _HumidityLineState extends State<HumidityLine> {
             .doc(timestampDate);
         return await documentReference.update({
           timestampHour: {
+            "Temperature": temperature,
             "Humidity": humidity,
           },
         }).then((_) => print('Successfully updated data on Firestore'))
@@ -80,6 +82,7 @@ class _HumidityLineState extends State<HumidityLine> {
             .doc(timestampDate);
         return await documentReference.set({
           timestampHour: {
+            "Temperature": temperature,
             "Humidity": humidity,
           },
         });
@@ -103,11 +106,12 @@ class _HumidityLineState extends State<HumidityLine> {
           data.values.map((e) => (double.tryParse(e.toString()) ?? 0.0)),
         );
 
+        final temperature = result['Temperature'];
         final humidity = result['Humidity'];
 
-        if (humidity != null) {
+        if (temperature != null) {
           setState(() {
-            updateDataAndChart(humidity);      
+            updateDataAndChart(temperature, humidity);      
           });
         } else {
           print('Missing humidity data in Firestore document');
@@ -118,7 +122,7 @@ class _HumidityLineState extends State<HumidityLine> {
     });
   }
 
-  Future<List<LiveData>> readInitialData(String timestampDate) async {
+  Future<List<LiveData>> readInitialDataHumidity(String timestampDate) async {
     final docRef = _firestore.collection('Usage').doc(timestampDate);
 
     try {
@@ -128,14 +132,15 @@ class _HumidityLineState extends State<HumidityLine> {
         final data = querySnapshot.data() as Map<String, dynamic>;
         data.forEach((timestamp, value) {
           final humidity = value['Humidity'] as double?;
+          
           if (humidity != null) {
-            chartData.add(LiveData(timestamp, humidity));
+            chartDataHumidity.add(LiveData(timestamp, humidity));
           }
         });
       } else {
         print('Document not found in Firestore');
       }
-      return chartData; // Return the populated list
+      return chartDataHumidity; // Return the populated list
     } on FirebaseException catch (error) {
       print('Error reading data from Firestore: $error');
       return []; // Return an empty list on error (optional)
@@ -163,32 +168,33 @@ class _HumidityLineState extends State<HumidityLine> {
     return SafeArea(
       child: Scaffold(
         body: SfCartesianChart(
+          margin: EdgeInsets.all(15),
           enableAxisAnimation: true,
-          title: const ChartTitle(text: 'Humidity'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: _tooltipBehavior,
           backgroundColor: Colors.transparent, // Optional for transparent background
           zoomPanBehavior: _zoomPanBehavior,
           series: <LineSeries<LiveData, String>>[
             LineSeries<LiveData, String>(
-              name: 'Humidity',
-              dataSource: chartData,
+              name: 'Humidity ( % )',
+              dataSource: chartDataHumidity,
               xValueMapper: (LiveData sales, _) => sales.time,
               yValueMapper: (LiveData sales, _) => sales.humidity,
-              color: const Color.fromRGBO(192, 108, 132, 1),
+              color: const Color.fromARGB(255, 204, 255, 0),
               
             )
           ],
           primaryXAxis: const CategoryAxis(
+            isVisible: false,
             majorGridLines: MajorGridLines(width: 0),
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             interval: 300,
-            title: AxisTitle(text: 'Time (seconds)'),
+            title: AxisTitle(text: 'Time (s)'),
           ),
           primaryYAxis: const NumericAxis(
             axisLine: AxisLine(width: 0),
             majorTickLines: MajorTickLines(size: 0),
-            title: AxisTitle(text: 'Humidity ( % )')
+            // title: AxisTitle(text: 'Humidity ( % )')
           ),
         ),
       ),

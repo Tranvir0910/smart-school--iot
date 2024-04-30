@@ -1,5 +1,8 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_firebase/controller/notification_controller.dart';
 import '../pages/home/sensor.dart';
 
 class GetSensorData extends StatefulWidget {
@@ -43,6 +46,16 @@ class _GetSensorDataState extends State<GetSensorData> {
 
   @override
   void initState() {
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod:
+        NotificationController.onActionReceivedMethod,
+      onNotificationCreatedMethod:
+        NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod:
+        NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod:
+        NotificationController.onDismissActionReceivedMethod,
+    );
     super.initState();
     // getSensorInClass();
     sensorDataStream = FirebaseFirestore.instance.collection('2A08').doc('Sensor').snapshots();
@@ -68,6 +81,8 @@ class _GetSensorDataState extends State<GetSensorData> {
             // myElement[2][2] = data[widget.classroom]['AirQuality'].toString();
             // myElement[3][2] = data[widget.classroom]['SoundQuality'].toString();
 
+            // FlutterBackgroundService().startService();
+
             if(int.parse(data['AirQuality']) < 2000){
               myElement[2][2] = 'Good';
             }else if(int.parse(data['AirQuality']) < 2500){
@@ -82,6 +97,27 @@ class _GetSensorDataState extends State<GetSensorData> {
               myElement[3][2] = 'Noise';
             }else{
               myElement[3][2] = 'Very Noise';
+            }
+            
+            if(myElement[3][2] == 'Very Noise'){
+              AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  channelKey: "basic_channel" ,
+                  title: "Warning!!!",
+                  body: "Your classroom is very noisy 🚨🚨🚨", 
+                  id: 1 
+                ),
+              );
+            }
+            if(myElement[2][2] == 'Unhealthy'){
+              AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  channelKey: "basic_channel" ,
+                  title: "Warning!!!",
+                  body: "Your classroom is experiencing air pollution. Please step outside! 🚨🚨🚨", 
+                  id: 1 
+                ),
+              );
             }
 
             myElement[1][2] = data['Humidity'].toString();

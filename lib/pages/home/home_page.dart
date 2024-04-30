@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
 
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
   Weather? _weather;
@@ -21,11 +21,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _wf.currentWeatherByCityName("Ho Chi Minh City").then((w) {
       setState(() {
         _weather = w;
       });
     });
+  }
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch(state){
+      case AppLifecycleState.paused:
+        print('App paused');
+        break;
+      case AppLifecycleState.resumed:
+        print('App resumed');
+        break;
+      case AppLifecycleState.inactive:
+        print('App inactive');
+        break;
+      case AppLifecycleState.detached:
+        print('App detached');
+        break;
+      case AppLifecycleState.hidden:
+        print('App hidden');
+        break;
+    }
   }
 
   final Shader linearGradient = const LinearGradient(
@@ -482,7 +511,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("Max: ${_weather?.tempMin?.celsius?.toStringAsFixed(0)} °C",
+        Text("Min: ${_weather?.tempMin?.celsius?.toStringAsFixed(0)} °C",
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -492,7 +521,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         const SizedBox(
           width: 15,
         ),
-        Text("Min: ${_weather?.tempMax?.celsius?.toStringAsFixed(0)} °C",
+        Text("Max: ${_weather?.tempMax?.celsius?.toStringAsFixed(0)} °C",
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
