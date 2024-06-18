@@ -16,3 +16,6 @@ The application also features statistical capabilities to enhance performance an
 5. [Fetching Data from Firestore Database and Displaying in the App](#fetching-data-from-firestore-database-and-displaying-in-the-app)
 6. [Controlling Devices via the App and Writing Data to Firebase](#controlling-devices-via-the-app-and-writing-data-to-firebase)
 
+## System Diagram
+![System Diagram](assets\readmeImages\systemdiagram.jpeg)
+
