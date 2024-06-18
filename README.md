@@ -17,5 +17,5 @@ The application also features statistical capabilities to enhance performance an
 6. [Controlling Devices via the App and Writing Data to Firebase](#controlling-devices-via-the-app-and-writing-data-to-firebase)
 
 ## System Diagram
-![System Diagram](assets\readmeImages\systemdiagram.jpeg)
+![System Diagram](assets/readmeImages/systemdiagram.jpeg)
 
