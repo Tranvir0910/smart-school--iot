@@ -1,16 +1,21 @@
-# flutter_firebase
+# Smart School Application System
 
-A new Flutter project.
+## Description
 
-## Getting Started
+The Smart School Application System is a project utilizing IoT architecture and platform to develop a simulated application supporting the management of school environments. This application uses sensors to measure air quality and sound environment in schools, and sends alerts when necessary.
 
-This project is a starting point for a Flutter application.
+The project aims to develop a smart school environment management application with low deployment costs and wide applicability. The application provides functions to support real-time management and device control in classrooms and school premises, collecting environmental parameters such as temperature, humidity, air quality, and noise. It has the capability for automation based on sensor data or user-programmed schedules.
 
-A few resources to get you started if this is your first Flutter project:
+The application also features statistical capabilities to enhance performance and management in a smart school environment.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Table of Contents
+1. [System Diagram](#system-diagram)
+2. [ESP32 Algorithm Diagram](#esp32-algorithm-diagram)
+3. [Functional Diagram of Smart School IoT Application](#functional-diagram-of-smart-school-iot-application)
+4. [App Design and Development](#app-design-and-development)
+5. [Fetching Data from Firestore Database and Displaying in the App](#fetching-data-from-firestore-database-and-displaying-in-the-app)
+6. [Controlling Devices via the App and Writing Data to Firebase](#controlling-devices-via-the-app-and-writing-data-to-firebase)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## System Diagram
+![System Diagram](assets\readmeImages\systemdiagram.jpeg)
+
