@@ -13,8 +13,6 @@ The application also features statistical capabilities to enhance performance an
 2. [ESP32 Algorithm Diagram](#esp32-algorithm-diagram)
 3. [Functional Diagram of Smart School IoT Application](#functional-diagram-of-smart-school-iot-application)
 4. [App Design and Development](#app-design-and-development)
-5. [Fetching Data from Firestore Database and Displaying in the App](#fetching-data-from-firestore-database-and-displaying-in-the-app)
-6. [Controlling Devices via the App and Writing Data to Firebase](#controlling-devices-via-the-app-and-writing-data-to-firebase)
 
 ## System Diagram
 ![System Diagram](assets/readmeImages/systemdiagram.jpeg)
@@ -82,3 +80,35 @@ The Smart School App provides essential functionalities for managing and monitor
 - Device information is synchronized and managed on Firebase, ensuring efficient and synchronized operations.
 
 These features enable the Smart School App to create a smart, safe, and efficient learning environment. It not only monitors and controls classroom conditions but also supports administrators in data analysis and decision-making, thereby enhancing the educational quality and learning experience for students.
+
+## App Design and Development
+
+**Smart School App Main Interface**
+
+The main interface of the Smart School App consists of four main pages, each responsible for essential functions in managing and controlling the smart classroom system.
+
+1. **Monitor Page**
+   
+The first page is the "Monitor" page where the app collects and displays environmental data from sensors in the classroom. Users can monitor parameters such as humidity, temperature, air quality, and sound levels. Data is continuously updated from Firebase, allowing administrators to track real-time classroom conditions. When air quality or noise levels exceed safe thresholds, the app sends push notifications for timely intervention.
+
+![Monitor Page](assets/readmeImages/monitor.png)
+
+2. **Control Devices Page**
+   
+The second page is "Control Devices," enabling users to control electronic devices in the classroom like projectors, LED lights, and ventilation fans. Device status data is fetched from Firebase, and users can easily toggle device states with simple actions in the app.
+
+![Control Devices Page](assets/readmeImages/control_devices_page.png)
+
+3. **Usage Page**
+   
+The third page, "Usage," provides detailed information on device usage and daily environmental data. Users can view charts of humidity and temperature over time, facilitating effective analysis and adjustment of classroom environments.
+
+![Usage Page](assets/readmeImages/usage_page.png)
+
+4. **Add Devices Page**
+   
+The last page is "Add Devices," where users can add new devices and sensors to the system. Upon adding a new device, the app updates the device data on Firebase to ensure the system remains up-to-date and operational.
+
+![Add Devices Page](assets/readmeImages/add_devices_page.png)
+
+
