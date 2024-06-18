@@ -27,6 +27,9 @@ The application also features statistical capabilities to enhance performance an
 
 ## ESP32 Algorithm Diagram
 ![ESP32 Algorithm Diagram](assets/readmeImages/ESP32ALU.png)
+
+[My Arduino Code](https://github.com/Tranvir0910/smart-school-esp32.git)
+
 1. **Initialization and Network Connection:**
    - ESP32 starts up and initializes.
    - It attempts to connect to the network.
