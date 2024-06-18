@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/const/const.dart';
-import 'package:flutter_firebase/pages/home/temperature_line.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HumidityLine extends StatefulWidget {
-  const HumidityLine({super.key});
+class TemperatureLine extends StatefulWidget {
+  const TemperatureLine({super.key});
 
   @override
-  State<HumidityLine> createState() => _HumidityLineState();
+  State<TemperatureLine> createState() => _TemperatureLineState();
 }
 
-class _HumidityLineState extends State<HumidityLine> {
+class _TemperatureLineState extends State<TemperatureLine> {
   
   Constants myConstants = Constants(); 
-  List<LiveData> chartDataHumidity = [];
+  List<LiveData> chartDataTemperature = [];
   late StreamSubscription<DocumentSnapshot> _firestoreSubscription;
   final _firestore = FirebaseFirestore.instance;
   late TooltipBehavior _tooltipBehavior;
@@ -28,9 +27,9 @@ class _HumidityLineState extends State<HumidityLine> {
   
   @override
   void initState() {
-    readInitialDataHumidity(timestampDateNow).then((data) {
+    readInitialDataTemperature(timestampDateNow).then((data) {
       setState(() {
-        chartDataHumidity = data;
+        chartDataTemperature = data;
       });
     }).catchError((error) {
       print('Error fetching data: $error');
@@ -57,12 +56,12 @@ class _HumidityLineState extends State<HumidityLine> {
     super.dispose();
   }
 
-Future<void> updateDataAndChart(double? temperature, double? humidity) async {
+  Future<void> updateDataAndChart(double? temperature, double? humidity) async {
     final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
     final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
 
     if (temperature != null && humidity != null) {
-      chartDataHumidity.add(LiveData(timestampHour, humidity));
+      chartDataTemperature.add(LiveData(timestampHour, temperature));
       // Update Firestore using a merge operation to preserve existing data
       final docRef = await _firestore.collection('Usage').doc(timestampDate).get();
       if (docRef.exists) {
@@ -122,7 +121,7 @@ Future<void> updateDataAndChart(double? temperature, double? humidity) async {
     });
   }
 
-  Future<List<LiveData>> readInitialDataHumidity(String timestampDate) async {
+  Future<List<LiveData>> readInitialDataTemperature(String timestampDate) async {
     final docRef = _firestore.collection('Usage').doc(timestampDate);
 
     try {
@@ -131,16 +130,17 @@ Future<void> updateDataAndChart(double? temperature, double? humidity) async {
       if (querySnapshot.exists) {
         final data = querySnapshot.data() as Map<String, dynamic>;
         data.forEach((timestamp, value) {
-          final humidity = value['Humidity'] as double?;
+          final temperature = value['Temperature'] as double?;
           
-          if (humidity != null) {
-            chartDataHumidity.add(LiveData(timestamp, humidity));
+          if (temperature != null) {
+            chartDataTemperature.add(LiveData(timestamp, temperature));  
+            
           }
         });
       } else {
         print('Document not found in Firestore');
       }
-      return chartDataHumidity; // Return the populated list
+      return chartDataTemperature; // Return the populated list
     } on FirebaseException catch (error) {
       print('Error reading data from Firestore: $error');
       return []; // Return an empty list on error (optional)
@@ -149,7 +149,6 @@ Future<void> updateDataAndChart(double? temperature, double? humidity) async {
       return []; // Return an empty list on error (optional)
     }
   }
-
 
 
   @override
@@ -176,11 +175,11 @@ Future<void> updateDataAndChart(double? temperature, double? humidity) async {
           zoomPanBehavior: _zoomPanBehavior,
           series: <LineSeries<LiveData, String>>[
             LineSeries<LiveData, String>(
-              name: 'Humidity ( % )',
-              dataSource: chartDataHumidity,
+              name: 'Temperature ( ℃ )',
+              dataSource: chartDataTemperature,
               xValueMapper: (LiveData sales, _) => sales.time,
               yValueMapper: (LiveData sales, _) => sales.humidity,
-              color: const Color.fromARGB(255, 204, 255, 0),
+              color: const Color.fromARGB(255, 255, 252, 0),
               
             )
           ],
@@ -194,7 +193,7 @@ Future<void> updateDataAndChart(double? temperature, double? humidity) async {
           primaryYAxis: const NumericAxis(
             axisLine: AxisLine(width: 0),
             majorTickLines: MajorTickLines(size: 0),
-            // title: AxisTitle(text: 'Humidity ( % )')
+            // title: AxisTitle(text: 'Temperature ( ℃ )')
           ),
         ),
       ),

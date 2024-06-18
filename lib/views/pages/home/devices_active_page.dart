@@ -1,18 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/const/const.dart';
-import 'package:flutter_firebase/pages/home/humidity_line.dart';
-import 'package:flutter_firebase/pages/home/temperature_line.dart';
+import 'package:flutter_firebase/firestore/getDevicesData.dart';
+import '../../../const/const.dart';
+import '../../../model/device_model.dart';
 
-class UsagePage extends StatefulWidget {
-  const UsagePage({super.key});
+class DevicesActivePage extends StatefulWidget {
+  const DevicesActivePage({super.key});
 
   @override
-  State<UsagePage> createState() => _UsagePageState();
+  State<DevicesActivePage> createState() => _DevicesActivePageState();
 }
 
-class _UsagePageState extends State<UsagePage> {
+class _DevicesActivePageState extends State<DevicesActivePage> {
+
+  List<DeviceModel> devices = [
+    DeviceModel(
+        name: 'Lighting',
+        isActive: false,
+        color: "#fef7e2",
+        icon: 'assets/svg/light.svg'),
+    DeviceModel(
+        name: 'Fan',
+        isActive: false,
+        color: "#cee7f0",
+        icon: 'assets/svg/ac.svg'),
+    DeviceModel(
+        name: 'Watering',
+        isActive: false,
+        color: "#9fe3ee",
+        icon: 'assets/svg/watering.svg'),
+    // DeviceModel(
+    //     name: 'Smart Sound',
+    //     isActive: false,
+    //     color: "#c207db",
+    //     icon: 'assets/svg/speaker.svg'),
+  ];
+
   @override
   Widget build(BuildContext context) {
+
     Constants myConstants = Constants(); 
 
     return Scaffold(
@@ -26,7 +51,7 @@ class _UsagePageState extends State<UsagePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Usage Page',
+                  'Smart Class',
                   style: TextStyle(
                     fontSize: 25,
                     color: Colors.white,
@@ -42,21 +67,21 @@ class _UsagePageState extends State<UsagePage> {
             //     ));
           ],
         ),
-        // actions: <Widget>[
-        //   CircleAvatar(
-        //     radius: 20,
-        //     backgroundColor: Colors.white70,
-        //     child: IconButton(
-        //       icon: const Icon(Icons.filter_list),
-        //       tooltip: 'Show Snackbar',
-        //       onPressed: () {
-        //         ScaffoldMessenger.of(context).showSnackBar(
-        //         const SnackBar(content: Text('This is a snackbar')));
-        //       },
-        //     ),
-        //   ),
-        //   const SizedBox(width: 10,)
-        // ],
+        actions: <Widget>[
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white70,
+            child: IconButton(
+              icon: const Icon(Icons.filter_list),
+              tooltip: 'Show Snackbar',
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('This is a snackbar')));
+              },
+            ),
+          ),
+          const SizedBox(width: 10,)
+        ],
       ),
       body: const Padding(
         padding: EdgeInsets.all(15.0),
@@ -68,7 +93,7 @@ class _UsagePageState extends State<UsagePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Temperature Usage",
+                  "Active Devices",
                   style: TextStyle(
                     fontSize: 19,
                     color: Colors.black54,
@@ -97,21 +122,13 @@ class _UsagePageState extends State<UsagePage> {
                 // ),
               ],
             ),
+
             Expanded(
-              child: TemperatureLine()
+              child: GetDevicesData(classroom: '2A08',),
             ),
-            Text(
-              "Humidity Usage",
-              style: TextStyle(
-                fontSize: 19,
-                color: Colors.black54,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Expanded(child: HumidityLine())
-          ]
-        )
-      )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/utils/string_to_color.dart';
+import 'package:flutter_firebase/views/utils/string_to_color.dart';
 
-import '../../model/device_model.dart';
+import '../../../model/device_model.dart';
 import '../home/control_page.dart';
 import '../home/devices.dart';
 

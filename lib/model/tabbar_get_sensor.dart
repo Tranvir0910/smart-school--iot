@@ -1,7 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/firestore/getDataSensor.dart';
 import '../const/const.dart';
 
 class TabbarSensorData extends StatefulWidget {

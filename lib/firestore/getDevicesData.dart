@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/utils/string_to_color.dart';
+import 'package:flutter_firebase/views/utils/string_to_color.dart';
 import '../model/device_model.dart';
-import '../pages/home/control_page.dart';
-import '../pages/home/devices.dart';
+import '../views/pages/home/devices.dart';
 
 class GetDevicesData extends StatefulWidget {
 

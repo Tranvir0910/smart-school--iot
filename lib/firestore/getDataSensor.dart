@@ -1,9 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_firebase/controller/notification_controller.dart';
-import '../pages/home/sensor.dart';
+import 'package:flutter_firebase/notification_controller/noti_controller.dart';
+import '../views/pages/home/sensor.dart';
 
 class GetSensorData extends StatefulWidget {
 
@@ -75,13 +74,9 @@ class _GetSensorDataState extends State<GetSensorData> {
           Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
 
           if (data != null) {
-            
-            // myElement[1][2] = data[widget.classroom]['Humidity'].toString();
-            // myElement[0][2] = data[widget.classroom]['Temperature'].toString();
-            // myElement[2][2] = data[widget.classroom]['AirQuality'].toString();
-            // myElement[3][2] = data[widget.classroom]['SoundQuality'].toString();
 
-            // FlutterBackgroundService().startService();
+            myElement[0][2] = data['Temperature'].toString();
+            myElement[1][2] = data['Humidity'].toString();
 
             if(int.parse(data['AirQuality']) < 2000){
               myElement[2][2] = 'Good';
@@ -109,6 +104,7 @@ class _GetSensorDataState extends State<GetSensorData> {
                 ),
               );
             }
+
             if(myElement[2][2] == 'Unhealthy'){
               AwesomeNotifications().createNotification(
                 content: NotificationContent(
@@ -119,9 +115,6 @@ class _GetSensorDataState extends State<GetSensorData> {
                 ),
               );
             }
-
-            myElement[1][2] = data['Humidity'].toString();
-            myElement[0][2] = data['Temperature'].toString();
 
             return Expanded(
               child: GridView.builder(

@@ -1,23 +1,21 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/const/const.dart';
-import 'package:flutter_firebase/pages/home/control_page.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:weather/weather.dart';
 
-class TemperatureLine extends StatefulWidget {
-  const TemperatureLine({super.key});
+class HumidityLine extends StatefulWidget {
+  const HumidityLine({super.key});
 
   @override
-  State<TemperatureLine> createState() => _TemperatureLineState();
+  State<HumidityLine> createState() => _HumidityLineState();
 }
 
-class _TemperatureLineState extends State<TemperatureLine> {
+class _HumidityLineState extends State<HumidityLine> {
   
   Constants myConstants = Constants(); 
-  List<LiveData> chartDataTemperature = [];
+  List<LiveData> chartDataHumidity = [];
   late StreamSubscription<DocumentSnapshot> _firestoreSubscription;
   final _firestore = FirebaseFirestore.instance;
   late TooltipBehavior _tooltipBehavior;
@@ -29,9 +27,9 @@ class _TemperatureLineState extends State<TemperatureLine> {
   
   @override
   void initState() {
-    readInitialDataTemperature(timestampDateNow).then((data) {
+    readInitialDataHumidity(timestampDateNow).then((data) {
       setState(() {
-        chartDataTemperature = data;
+        chartDataHumidity = data;
       });
     }).catchError((error) {
       print('Error fetching data: $error');
@@ -58,12 +56,12 @@ class _TemperatureLineState extends State<TemperatureLine> {
     super.dispose();
   }
 
-  Future<void> updateDataAndChart(double? temperature, double? humidity) async {
+Future<void> updateDataAndChart(double? temperature, double? humidity) async {
     final timestampHour = DateFormat("h:mm:ss a - dd-MM-yy").format(DateTime.now());
     final timestampDate = DateFormat("dd-MM-yy").format(DateTime.now());
 
     if (temperature != null && humidity != null) {
-      chartDataTemperature.add(LiveData(timestampHour, temperature));
+      chartDataHumidity.add(LiveData(timestampHour, humidity));
       // Update Firestore using a merge operation to preserve existing data
       final docRef = await _firestore.collection('Usage').doc(timestampDate).get();
       if (docRef.exists) {
@@ -123,7 +121,7 @@ class _TemperatureLineState extends State<TemperatureLine> {
     });
   }
 
-  Future<List<LiveData>> readInitialDataTemperature(String timestampDate) async {
+  Future<List<LiveData>> readInitialDataHumidity(String timestampDate) async {
     final docRef = _firestore.collection('Usage').doc(timestampDate);
 
     try {
@@ -132,17 +130,16 @@ class _TemperatureLineState extends State<TemperatureLine> {
       if (querySnapshot.exists) {
         final data = querySnapshot.data() as Map<String, dynamic>;
         data.forEach((timestamp, value) {
-          final temperature = value['Temperature'] as double?;
+          final humidity = value['Humidity'] as double?;
           
-          if (temperature != null) {
-            chartDataTemperature.add(LiveData(timestamp, temperature));  
-            
+          if (humidity != null) {
+            chartDataHumidity.add(LiveData(timestamp, humidity));
           }
         });
       } else {
         print('Document not found in Firestore');
       }
-      return chartDataTemperature; // Return the populated list
+      return chartDataHumidity; // Return the populated list
     } on FirebaseException catch (error) {
       print('Error reading data from Firestore: $error');
       return []; // Return an empty list on error (optional)
@@ -151,6 +148,7 @@ class _TemperatureLineState extends State<TemperatureLine> {
       return []; // Return an empty list on error (optional)
     }
   }
+
 
 
   @override
@@ -169,7 +167,7 @@ class _TemperatureLineState extends State<TemperatureLine> {
     return SafeArea(
       child: Scaffold(
         body: SfCartesianChart(
-          margin: EdgeInsets.all(15),
+          margin: const EdgeInsets.all(15),
           enableAxisAnimation: true,
           legend: const Legend(isVisible: true),
           tooltipBehavior: _tooltipBehavior,
@@ -177,11 +175,11 @@ class _TemperatureLineState extends State<TemperatureLine> {
           zoomPanBehavior: _zoomPanBehavior,
           series: <LineSeries<LiveData, String>>[
             LineSeries<LiveData, String>(
-              name: 'Temperature ( ℃ )',
-              dataSource: chartDataTemperature,
+              name: 'Humidity ( % )',
+              dataSource: chartDataHumidity,
               xValueMapper: (LiveData sales, _) => sales.time,
               yValueMapper: (LiveData sales, _) => sales.humidity,
-              color: const Color.fromARGB(255, 255, 252, 0),
+              color: const Color.fromARGB(255, 204, 255, 0),
               
             )
           ],
@@ -195,7 +193,7 @@ class _TemperatureLineState extends State<TemperatureLine> {
           primaryYAxis: const NumericAxis(
             axisLine: AxisLine(width: 0),
             majorTickLines: MajorTickLines(size: 0),
-            // title: AxisTitle(text: 'Temperature ( ℃ )')
+            // title: AxisTitle(text: 'Humidity ( % )')
           ),
         ),
       ),

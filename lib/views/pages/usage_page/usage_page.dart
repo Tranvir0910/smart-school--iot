@@ -1,43 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/firestore/getDevicesData.dart';
-import '../../const/const.dart';
-import '../../model/device_model.dart';
+import 'package:flutter_firebase/const/const.dart';
+import 'package:flutter_firebase/views/pages/usage_page/humidity_line.dart';
+import 'package:flutter_firebase/views/pages/usage_page/temperature_line.dart';
 
-class DevicesActivePage extends StatefulWidget {
-  const DevicesActivePage({super.key});
+class UsagePage extends StatefulWidget {
+  const UsagePage({super.key});
 
   @override
-  State<DevicesActivePage> createState() => _DevicesActivePageState();
+  State<UsagePage> createState() => _UsagePageState();
 }
 
-class _DevicesActivePageState extends State<DevicesActivePage> {
-
-  List<DeviceModel> devices = [
-    DeviceModel(
-        name: 'Lighting',
-        isActive: false,
-        color: "#fef7e2",
-        icon: 'assets/svg/light.svg'),
-    DeviceModel(
-        name: 'Fan',
-        isActive: false,
-        color: "#cee7f0",
-        icon: 'assets/svg/ac.svg'),
-    DeviceModel(
-        name: 'Watering',
-        isActive: false,
-        color: "#9fe3ee",
-        icon: 'assets/svg/watering.svg'),
-    // DeviceModel(
-    //     name: 'Smart Sound',
-    //     isActive: false,
-    //     color: "#c207db",
-    //     icon: 'assets/svg/speaker.svg'),
-  ];
-
+class _UsagePageState extends State<UsagePage> {
   @override
   Widget build(BuildContext context) {
-
     Constants myConstants = Constants(); 
 
     return Scaffold(
@@ -51,7 +26,7 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Smart Class',
+                  'Usage Page',
                   style: TextStyle(
                     fontSize: 25,
                     color: Colors.white,
@@ -67,21 +42,21 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
             //     ));
           ],
         ),
-        actions: <Widget>[
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.white70,
-            child: IconButton(
-              icon: const Icon(Icons.filter_list),
-              tooltip: 'Show Snackbar',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('This is a snackbar')));
-              },
-            ),
-          ),
-          const SizedBox(width: 10,)
-        ],
+        // actions: <Widget>[
+        //   CircleAvatar(
+        //     radius: 20,
+        //     backgroundColor: Colors.white70,
+        //     child: IconButton(
+        //       icon: const Icon(Icons.filter_list),
+        //       tooltip: 'Show Snackbar',
+        //       onPressed: () {
+        //         ScaffoldMessenger.of(context).showSnackBar(
+        //         const SnackBar(content: Text('This is a snackbar')));
+        //       },
+        //     ),
+        //   ),
+        //   const SizedBox(width: 10,)
+        // ],
       ),
       body: const Padding(
         padding: EdgeInsets.all(15.0),
@@ -93,7 +68,7 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Active Devices",
+                  "Temperature Usage",
                   style: TextStyle(
                     fontSize: 19,
                     color: Colors.black54,
@@ -122,13 +97,21 @@ class _DevicesActivePageState extends State<DevicesActivePage> {
                 // ),
               ],
             ),
-
             Expanded(
-              child: GetDevicesData(classroom: '2A08',),
+              child: TemperatureLine()
             ),
-          ],
-        ),
-      ),
+            Text(
+              "Humidity Usage",
+              style: TextStyle(
+                fontSize: 19,
+                color: Colors.black54,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Expanded(child: HumidityLine())
+          ]
+        )
+      )
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../const/custom_styles.dart';
 import '../model/sensor.dart';
-import '../widgets/my_sensor_card.dart';
+import '../views/widgets/my_sensor_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);

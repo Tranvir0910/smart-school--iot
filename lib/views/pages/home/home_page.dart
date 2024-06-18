@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
-import '../../const/const.dart';
-import '../../firestore/getDataSensor.dart';
+import '../../../const/const.dart';
+import '../../../firestore/getDataSensor.dart';
 import 'control_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -411,7 +411,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
               height: 10,
             ),
             // const GetSensorData(classroom: '2A08'),
-            const Expanded(child: GetSensorData()),   
+            const Expanded(child: GetSensorData()),    
             const SizedBox(
               height: 5,
             ),

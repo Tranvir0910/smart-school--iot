@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/pages/add_devices_page/widgets/custom_scaffold.dart';
+import 'package:flutter_firebase/views/pages/add_devices_page/widgets/custom_scaffold.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../const/const.dart';
+import '../../../const/const.dart';
 
 class AddDevices extends StatefulWidget {
   const AddDevices({super.key});

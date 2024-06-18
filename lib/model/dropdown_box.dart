@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import '../const/const.dart';
-import '../pages/home/control_page.dart';
+import '../views/pages/home/control_page.dart';
 class DropDownSelect extends StatefulWidget {
   const DropDownSelect({super.key});
 

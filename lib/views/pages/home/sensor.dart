@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../element/responsive.dart';
+import '../../../element/responsive.dart';
 
 class SensorWidget extends StatelessWidget {
 
